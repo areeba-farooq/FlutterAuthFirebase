@@ -1,4 +1,5 @@
 import 'package:authentication_firebase/Pages/login_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatefulWidget {
@@ -20,6 +21,19 @@ class _SettingsState extends State<Settings> {
     //clean up the controller when the widget is disposed.
     passwordController.dispose();
   }
+  final currentUser = FirebaseAuth.instance.currentUser;
+  changePassword() async {
+    try{
+      await currentUser!.updatePassword(password);
+      FirebaseAuth.instance.signOut();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login()));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Color(0xFF73b504),
+          content: Text('Password has been changed! Please Login again.', style: TextStyle(color: Colors.black, fontFamily: 'Karla-Medium', fontSize: 18 ),)));
+    }catch(e){}
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -72,9 +86,8 @@ class _SettingsState extends State<Settings> {
                 setState(() {
                   password = passwordController.text;
                 });
+                changePassword();
               }
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Login()));
-
             }, child: const Text('Change Password', style: TextStyle(
                 color: Colors.black, fontSize: 17
             ),),

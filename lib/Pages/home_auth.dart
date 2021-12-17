@@ -1,3 +1,5 @@
+import 'package:authentication_firebase/Pages/login_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'Tabs/dashboard.dart';
@@ -30,7 +32,11 @@ class _HomeAuthState extends State<HomeAuth> {
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.logout))
+          IconButton(onPressed: () async{
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const Login()));
+
+          }, icon: const Icon(Icons.logout))
         ],
       ),
       drawer: const Drawer(),

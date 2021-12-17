@@ -1,5 +1,6 @@
 import 'package:authentication_firebase/Pages/login_auth.dart';
 import 'package:authentication_firebase/Pages/signup_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -19,6 +20,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     super.dispose();
     //clean up the controller when the widget is disposed.
     emailController.dispose();
+  }
+
+  resetPassword() async{
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          backgroundColor: Color(0xFF73b504),
+          content: Text('Password reset email has been sent!', style: TextStyle(color: Colors.white, fontFamily: 'Karla-Medium', fontSize: 18 ),)));
+
+    }on FirebaseAuthException catch (e){
+      if(e.code == 'user-not-found'){
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('No user found with that email address', style: TextStyle(color: Colors.white, fontFamily: 'Karla-Medium', fontSize: 18 ),)));
+      }
+    }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -44,7 +62,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   validator: (value){
                     if(value!.isEmpty){
                       return 'Please enter email address';
-                    } else if (value.contains('@')){
+                    } else if (!value.contains('@')){
                       return 'Please enter Valid Email Adress';
                     }else{
                       return null;
@@ -69,8 +87,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   setState(() {
                     email = emailController.text;
                   });
+                  resetPassword();
                 }
-              }, child: const Text('Send Code', style: TextStyle(
+              }, child: const Text('Send Link', style: TextStyle(
                   color: Colors.black, fontSize: 20
               ),),
                 style: ElevatedButton.styleFrom(
