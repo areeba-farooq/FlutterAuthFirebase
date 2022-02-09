@@ -1,7 +1,8 @@
 import 'package:authentication_firebase/Pages/forgotpassword_auth.dart';
 import 'package:authentication_firebase/Pages/signup_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'home_auth.dart';
 class Login extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginState extends State<Login> {
   bool isHidden = true;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void dispose() {
@@ -30,6 +32,10 @@ class _LoginState extends State<Login> {
   userLogin() async{
     try{
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      if(kDebugMode){
+        print(userCredential);
+      }
+      user!.displayName;
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> const HomeAuth()));
     }on FirebaseAuthException catch(e){
       if(e.code == 'user-not-found'){
@@ -124,7 +130,7 @@ class _LoginState extends State<Login> {
                         setState(() {
                           isHidden = !isHidden;
                         });
-                      }, icon:  Icon(isHidden ? Icons.visibility_off : Icons.visibility, color: const Color(0xFFF9A826) ))
+                      }, icon:  Icon(isHidden ? Icons.visibility : Icons.visibility_off, color: const Color(0xFFF9A826) ))
 
                   ),
                 ),

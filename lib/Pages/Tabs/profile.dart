@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -10,6 +11,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final uid = FirebaseAuth.instance.currentUser?.uid;
+  final name = FirebaseAuth.instance.currentUser!.displayName;
   final email = FirebaseAuth.instance.currentUser?.email;
   final createdTime = FirebaseAuth.instance.currentUser?.metadata.creationTime;
   User? user = FirebaseAuth.instance.currentUser;
@@ -17,11 +19,16 @@ class _ProfileState extends State<Profile> {
     try{
       if(user != null && !user!.emailVerified){
         await user!.sendEmailVerification();
+        user!.displayName;
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             backgroundColor: Color(0xFF73b504),
             content: Text('Verification link has been sent!', style: TextStyle(color: Colors.black, fontFamily: 'Karla-Medium', fontSize: 18 ),)));
       }
-    }catch(e){}
+    }catch(e){
+      if(kDebugMode){
+        print(e);
+      }
+    }
 
   }
 
@@ -46,6 +53,14 @@ class _ProfileState extends State<Profile> {
             child: CircleAvatar(
               radius: 60,
             ),
+          ),
+          const SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 75.0),
+            child: Text(user!.displayName.toString(), style: const TextStyle(
+                fontSize: 18,
+                color: Color(0xFFF9A826)
+            ),),
           ),
           const SizedBox(height: 20,),
            Padding(

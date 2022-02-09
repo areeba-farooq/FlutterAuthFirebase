@@ -1,9 +1,13 @@
+import 'package:authentication_firebase/Pages/Tabs/dashboard.dart';
+import 'package:authentication_firebase/Pages/enrollment_page.dart';
 import 'package:authentication_firebase/Pages/login_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'Pages/Tabs/profile.dart';
+import 'Pages/edit_page.dart';
+import 'Pages/home_auth.dart';
 
 void main(){
   //Initialize the firebase app
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
           }
           return  const MaterialApp(
             debugShowCheckedModeBanner: false,
-            home:  Login(),
+            home:  HomeAuth(),
           );
         });
 
